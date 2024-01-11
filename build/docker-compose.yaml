@@ -1,0 +1,49 @@
+version: '3.7'
+
+services:
+  httpserver:
+    build:
+      context: ..
+      dockerfile: ./build/Dockerfile
+      args:
+        - VARIANT=http
+        - APP_NAME=server
+    environment:
+      ADDR: ":3000"
+      COMPLEXITY: "2"
+    expose:
+      - '3000'
+  httpclient:
+    build:
+      context: ..
+      dockerfile: ./build/Dockerfile
+      args:
+        - VARIANT=http
+        - APP_NAME=client
+    environment:
+      ADDR: "httpserver:3000"
+    depends_on:
+      - httpserver
+  tcpserver:
+    build:
+      context: ..
+      dockerfile: ./build/Dockerfile
+      args:
+        - VARIANT=tcp
+        - APP_NAME=server
+    environment:
+      ADDR: ":3000"
+      COMPLEXITY: "2"
+    expose:
+      - '3000'
+  tcpclient:
+    build:
+      context: ..
+      dockerfile: ./build/Dockerfile
+      args:
+        - VARIANT=tcp
+        - APP_NAME=client
+    environment:
+      ADDR: "tcpserver:3000"
+    depends_on:
+      - tcpserver
